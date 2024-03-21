@@ -37,11 +37,6 @@ main {
   background-color: var(--primary);
 }
 
-aside {
-  background-color: var(--secondary);
-  position: static;
-}
-
 a {
   color: var(--light);
 }
@@ -85,6 +80,12 @@ h6 {
 h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
   text-decoration: underline;
+}
+
+.navigation {
+  background-color: var(--secondary);
+  position: fixed;
+  height: 100%;
 }
 
 .ident-1 {
