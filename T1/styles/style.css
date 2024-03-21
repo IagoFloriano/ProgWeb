@@ -86,6 +86,12 @@ pre {
   color: var(--light);
 }
 
+canvas {
+  display: block;
+  width: 400px;
+  height: 400px;
+}
+
 .navigation {
   background-color: var(--secondary);
   position: fixed;
