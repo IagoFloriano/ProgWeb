@@ -82,10 +82,18 @@ h1, h2, h3, h4, h5, h6 {
   text-decoration: underline;
 }
 
+pre {
+  color: var(--light);
+}
+
 .navigation {
   background-color: var(--secondary);
   position: fixed;
   height: 100%;
+}
+
+.main-pane {
+  background-color: var(--primary);
 }
 
 .ident-1 {
