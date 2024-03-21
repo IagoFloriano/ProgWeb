@@ -35,7 +35,6 @@ body {
 main {
   color: var(--light);
   background-color: var(--primary);
-  height: 100%;
 }
 
 aside {

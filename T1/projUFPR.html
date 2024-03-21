@@ -7,7 +7,7 @@
     <title>Minha página</title>
   </head>
   <body>
-    <main class="row flex-nowrap">
+    <main class="row">
       <!--Coluna lateral-->
       <aside class="col-3">
         <h1 class"text-center">Iago Mello Floriano</h1>
@@ -16,10 +16,10 @@
         </nav>
         <nav class="row">
           <a class="col-12 ident-1" href="./projUFPR.html">Projetos da faculdade</a>
-          <a class="col-12 ident-2" href="spaceinvaders">SpaceInvaders</a>
-          <a class="col-12 ident-2" href="compilador">Compilador</a>
-          <a class="col-12 ident-2" href="vigenere">Cifrador</a>
-          <a class="col-12 ident-2" href="ppos">Sistetma Operacional</a>
+          <a class="col-12 ident-2" href="#spaceinvaders">SpaceInvaders</a>
+          <a class="col-12 ident-2" href="#compilador">Compilador</a>
+          <a class="col-12 ident-2" href="#vigenere">Cifrador</a>
+          <a class="col-12 ident-2" href="#ppos">Sistetma Operacional</a>
         </nav>
         <nav class="row">
           <a class="col-12 ident-1" href="./projIndi.html">Projetos individuais</a>
@@ -32,13 +32,82 @@
       <div class="col-9">
         <h1>Alguns projetos que fiz para a UFPR</h1>
         <ul class="link-list">
-          <li id="spaceinvaders">Space invaders em C
+          <li id="spaceinvaders"><h6>Space invaders em C:</h6>
+            <img class="ident-1" src="./imgs/spaceInvaders.png" alt="Space Invaders"><br>
+            <a class="ident-1" href="https://github.com/IagoFloriano/SpaceInvaders">Projeto no github</a>
           </li>
-          <li id="compilador">Compilador de Pascal para MEPA em lex e bison
+          <li id="compilador"><h6>Compilador de Pascal para MEPA em lex e bison:</h6>
+            <div class="row ident-1">
+              <pre class="col">Código em pascal:<code>
+program cmdIf (input, output);
+var i, j: integer;       
+begin                   
+   i:=0;                   
+   while (i &lt j) do        
+   begin                   
+      if (i div 2 * 2 = i)  
+        then   i := 0
+        else   i := 1;
+      i := i+1                    
+   end                    
+end. 
+              </code></pre>
+              <pre class="col">Código em MEPA:<code>
+     INPP
+     AMEM 2
+     DSVS R00
+R00: NADA 
+     CRCT 0
+     ARMZ 0, 0
+R01: NADA 
+     CRVL 0, 0
+     CRVL 0, 1
+     CMME
+     DSVF R02
+     CRVL 0, 0
+     CRCT 2
+     DIVI
+     CRCT 2
+     MULT
+     CRVL 0, 0
+     CMIG
+     DSVF R04
+     CRCT 0
+     ARMZ 0, 0
+     DSVS R03
+R04: NADA 
+     CRCT 1
+     ARMZ 0, 0
+R03: NADA 
+     CRVL 0, 0
+     CRCT 1
+     SOMA
+     ARMZ 0, 0
+     DSVS R01
+R02: NADA 
+     DMEM 2
+     PARA
+              </code></pre>
+            </div>
+            <a class="ident-1" href="https://github.com/IagoFloriano/Compiladores">Projeto no github</a>
           </li>
-          <li id="vigenere">Cifrador e decifrador de Vigenere feito em Haskell
+          <li id="vigenere"><h6>Cifrador e decifrador feito em Haskell:</h6>
+            <p class="ident-1">Cifra usada usa uma mistura do método de Vigenere e o método Play Fair</p>
+            <div class="row ident-1">
+              <pre class="col">Texto original usando a chave "cifra":<code>
+Cifra usada usa uma mistura do método
+de Vigenere e o método Play Fair
+              </code></pre>
+              <pre class="col">Texto cifrado:<code>
+YBKFQ8XPPV4VGQ238XF7HPENJKNURIF52J8YMM
+R00D56Q2MQPD0B
+              </code></pre>
+            </div>
+            <a class="ident-1" href="https://github.com/IagoFloriano/Criptografia/tree/master/T1">Projeto no github</a>
           </li>
-          <li id="ppos">Sistema Operacional simples feito em C
+          <li id="ppos"><h6>Sistema Operacional simples feito em C:</h6>
+            <p class=ident-1>Projeto implementa o scheduler de um sistema, levando em conta a prioridade de processos além de permitir threads. Também adicionar a possibilidade de fazer o uso the "threads". Com isso também foi necessário implementar método que evitam "race conditions", por exemplo, semáforos.</p>
+            <a class="ident-1" href="https://github.com/IagoFloriano/SistemasOperacionais">Projeto no github</a>
           </li>
         </ul>
       </div>
