@@ -1,0 +1,21 @@
+Para gerar as tabelas rodar:
+  ruby defineTabelas.rb
+com isso será gerado o arquivo tabelas.sqlite3
+
+Para popular as tabelas rodar:
+  ruby populaTabelas.rb
+com isso serão populadas as tabelas
+
+As tabelas criadas nesse processo são:
+tabela | campos
+pessoa | nome, sobrenome, endereco, cidade
+telefone | numero, pessoa_id
+curso | nome
+inscricao | pessoa_id, curso_id
+
+Foi feito para que os comandos sejam dados como argumentos da linha de comando para o arquivo main.rb
+Exemplos de comandos:
+ruby main.rb inclusao pessoa last_name="Svendson" first_name="Tove" address="Borgvn 23" city="Sandnes"
+ruby main.rb alteracao pessoa id=5 sobrenome="Johson"
+ruby main.rb exclusao pessoa id=5
+ruby main.rb lista pessoa
