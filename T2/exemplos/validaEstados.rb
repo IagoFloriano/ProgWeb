@@ -1,4 +1,5 @@
 require 'active_record'
+
 class String
   def only_letters?
     !!match(/ˆ[[:alpha:]]+$/)
@@ -9,18 +10,10 @@ ActiveRecord::Base.establish_connection :adapter => "sqlite3",
   :database => "Tabelas.sqlite3"
 
 class Estado < ActiveRecord::Base;
-  validate :sigla_tem_tamanho_dois, :sigla_somente_caracteres
-  def sigla_tem_tamanho_dois
-    if sigla.size != 2
-      errors.add(:sigla, "Siga tem de ter tamanho dois")
-    end
-  end
-
-  def sigla_somente_caracteres
-    if !sigla.only_letters?
-      errors.add(:sigla, "Sigla pode ter somente caracteres")
-    end
-  end
+  validates :sigla, format:
+    {with: /\A[a-zA-Z]+\z/, message: "Sigla pode ter somente carecteres"}
+  validates :sigla, length:
+    {is:2, message: "Siga tem de ter tamanho dois"}
 end
 
 est = Estado.new ()
