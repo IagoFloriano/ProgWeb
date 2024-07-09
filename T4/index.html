@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Visualizeitor</title>
+  <meta charset="utf-8">
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+
+    td {
+      width: 80px;
+      height: 80px;
+      text-align: center;
+      font-weight: bold;
+      border: 1px solid black;
+    }
+
+    .approved {
+      background-color: green;
+    }
+
+    .failed {
+      background-color: red;
+    }
+
+    .enrolled {
+      background-color: blue
+    }
+
+    .equivalence {
+      background-color: yellow;
+    }
+
+    .not-coursed {
+      background-color: white;
+    }
+  </style>
+</head>
+<body>
+  <table id="curriculum-grid">
+    <!-- Tabela vazia para ser preenchida com dados do XML -->
+  </table>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
