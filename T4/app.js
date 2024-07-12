@@ -5,7 +5,7 @@ $(document).ready(function () {
     dataType: "xml",
     success: function (data) {
       // Construir a grade curricular
-      buildCurriculumGrid(data);
+      constroiGradeCurriculo(data);
       console.log("Success!");
     },
     error: function (jqXHR, textStatus, errorThrown) {
@@ -15,165 +15,165 @@ $(document).ready(function () {
   });
 });
 
-function getStatus(status) {
-  //  aprovado       dispensa de disciplina (com nota)
-  if (status == 1 || status == 4) {
-    return "approved";
-  }
-  // reprovado nota  reprovado freq  cancelado  reprovado sem nota  trancamento total  trancamento administrativo
-  if (status == 2 || status == 3 || status == 5 || status == 9 || status == 12 || status == 15) {
-    return "failed";
-  }
-  // matricula
-  if (status == 10) {
-    return "enrolled";
-  }
-  // equivalencia
-  if (status == 11) {
-    return "equivalence";
-  }
-  return "not-coursed";
-}
-
-function buildCurriculumGrid(xmlData) {
+function constroiGradeCurriculo(xmlData) {
   // Relaciona estudantes x disciplinas
-  const disciplines = {};
-  const students = {};
+  const disciplinas = {};
+  const estudantes = {};
   $(xmlData)
     .find("ALUNO")
     .each(function () {
-      console.log(this);
-      const code = $(this).find("COD_ATIV_CURRIC").text();
+      const cod = $(this).find("COD_ATIV_CURRIC").text();
       const RA = $(this).find("MATR_ALUNO").text();
 
-      if (!disciplines[code]) {
-        const name = $(this).find("NOME_ATIV_CURRIC").text();
-        disciplines[code] = { name };
+      if (!disciplinas[cod]) {
+        const nome = $(this).find("NOME_ATIV_CURRIC").text();
+        disciplinas[cod] = { nome };
       }
 
       const status = parseInt($(this).find("SITUACAO_ITEM").text());
 
-      if (!students[RA]) students[RA] = { enrolled: {} };
-      students[RA].enrolled[code] = getStatus(status);
+      if (!estudantes[RA]) estudantes[RA] = { matriculado: {} };
+      estudantes[RA].matriculado[cod] = getStatus(status);
     });
 
-  // Construir cabeçalho da tabela
-  const curriculumGrid = $("#curriculum-grid");
-  const headerRow = $("<tr>").append("<td></td>"); // Espaço vazio no canto superior esquerdo
-  for (const [code, { name }] of Object.entries(disciplines)) {
-    headerRow.append(`<td>${code}<br>${name}</td>`);
+  // Constroi cabeçalho da tabela
+  const gradeCurriculo = $("#grade-curriculo");
+  const linhaCabecalho = $("<tr>").append("<td></td>");
+  for (const [cod, { nome }] of Object.entries(disciplinas)) {
+    linhaCabecalho.append(`<td>${cod}<br>${nome}</td>`);
   }
-  curriculumGrid.append(headerRow);
+  gradeCurriculo.append(linhaCabecalho);
 
-  for (const [RA, { enrolled }] of Object.entries(students)) {
-    const row = $("<tr>").append(`<td>${RA}</td>`);
-    for (const [code] of Object.entries(disciplines)) {
-      row.append($("<td>").addClass(enrolled[code]));
+  // Adiciona uma linha para cada aluno
+  for (const [RA, { matriculado }] of Object.entries(estudantes)) {
+    const linha = $("<tr>").append(`<td>${RA}</td>`);
+    for (const [cod] of Object.entries(disciplinas)) {
+      linha.append($("<td>").addClass(matriculado[cod])); // adiciona cor a celular
     }
-    curriculumGrid.append(row);
+    gradeCurriculo.append(linha);
   }
 
-  const getCellInfo = (ctx) => {
-    const studentRA = $(ctx).closest("tr").find("td:first-child").text();
-    const clickedDisciplineIndex = $(ctx).index() + 1;
-    const disciplineCode = $("#curriculum-grid tr:first")
-      .find(`td:nth-child(${clickedDisciplineIndex})`)
+  const getInfoCelula = (ctx) => {
+    const RAaluno = $(ctx).closest("tr").find("td:first-child").text();
+    const idxDisciplinaClicada = $(ctx).index() + 1;
+    const codDisciplina = $("#grade-curriculo tr:first")
+      .find(`td:nth-child(${idxDisciplinaClicada})`)
       .contents()
       .filter(function () {
         return this.nodeType === 3;
       })
       .first()
       .text();
-    return { studentRA, disciplineCode };
+    return { RAaluno, codDisciplina };
   };
 
   // Adicionar eventos de clique às células
-  curriculumGrid.on("click", "td", function (event) {
+  gradeCurriculo.on("click", "td", function (event) {
     event.preventDefault();
 
     if (event.which !== 1) return; // Não é clique com botão esquerdo
 
-    const { studentRA, disciplineCode } = getCellInfo(this);
+    const { RAaluno, codDisciplina } = getInfoCelula(this);
 
-    const lastEnrollment = getEnrollmentData(
+    const ultMatricula = getDadosMatricula(
       xmlData,
-      studentRA,
-      disciplineCode
+      RAaluno,
+      codDisciplina
     );
 
     alert(
-      lastEnrollment
-        ? `Disciplina: ${disciplineCode}\n` +
-            `Última vez cursada: ${lastEnrollment.lastCursada}\n` +
-            `Nota: ${lastEnrollment.nota}\n` +
-            `Frequência: ${lastEnrollment.frequencia}`
+      ultMatricula
+        ? `Disciplina: ${codDisciplina}\n` +
+            `Última vez cursada: ${ultMatricula.ultCursada}\n` +
+            `Nota: ${ultMatricula.nota}\n` +
+            `Frequência: ${ultMatricula.frequencia}`
         : "Sem inscrição na disciplina"
     );
   });
 
-  curriculumGrid.on("contextmenu", "td", function (event) {
+  gradeCurriculo.on("contextmenu", "td", function (event) {
     event.preventDefault();
 
-    const { studentRA, disciplineCode } = getCellInfo(this);
-    const history = getEnrollmentHistory(xmlData, studentRA, disciplineCode);
+    const { RAaluno, codDisciplina } = getInfoCelula(this);
+    const historico = getHistoricoMatricula(xmlData, RAaluno, codDisciplina);
 
-    if (history?.length > 0) {
-      let historyMessage = `Histórico para a disciplina ${disciplineCode}:\n`;
+    if (historico?.length > 0) {
+      let mensagemHistorico = `Histórico para a disciplina ${codDisciplina}:\n`;
 
-      for (let i = 0; i < history.length; i++) {
-        const { anoSemestre, nota, frequencia } = history[i];
+      for (let i = 0; i < historico.length; i++) {
+        const { anoSemestre, nota, frequencia } = historico[i];
 
-        historyMessage +=
+        mensagemHistorico +=
           `Ano/Semestre: ${anoSemestre}\n` +
           `Nota: ${nota}\n` +
           `Frequência: ${frequencia}\n\n`;
       }
 
-      alert(historyMessage);
+      alert(mensagemHistorico);
     } else {
       alert("Sem história para a disciplina");
     }
   });
 }
 
-function getEnrollmentData(xmlData, studentRA, disciplineCode) {
-  const enrollmentData = $(xmlData)
-    .find("ALUNO")
-    .filter(function () {
-      const currentRA = $(this).find("MATR_ALUNO").text();
-      const currentDisciplineCode = $(this).find("COD_ATIV_CURRIC").text();
-      return (
-        currentRA === studentRA && currentDisciplineCode === disciplineCode
-      );
-    })
-    .last();
-
-  if (!enrollmentData.length) return null;
-
-  const lastCursada = enrollmentData.find("PERIODO").text();
-  const nota = enrollmentData.find("MEDIA_FINAL").text();
-  const frequencia = enrollmentData.find("FREQUENCIA").text();
-
-  return { lastCursada, nota, frequencia };
+function getStatus(status) {
+  //  aprovado       dispensa de disciplina (com nota)
+  if (status == 1 || status == 4) {
+    return "aprovado";
+  }
+  // reprovado nota  reprovado freq  cancelado  reprovado sem nota  trancamento total  trancamento administrativo
+  if (status == 2 || status == 3 || status == 5 || status == 9 || status == 12 || status == 15) {
+    return "reprovado";
+  }
+  // matricula
+  if (status == 10) {
+    return "matriculado";
+  }
+  // equivalencia
+  if (status == 11) {
+    return "equivalencia";
+  }
+  return "nao-cursado";
 }
 
-function getEnrollmentHistory(xmlData, studentRA, disciplineCode) {
-  const enrollmentHistory = [];
+function getHistoricoMatricula(xmlData, RAaluno, codDisciplina) {
+  const historicoMatricula = [];
 
   $(xmlData)
     .find("ALUNO")
     .each(function () {
-      const currentRA = $(this).find("MATR_ALUNO").text();
-      const currentDisciplineCode = $(this).find("COD_ATIV_CURRIC").text();
+      const RAatual = $(this).find("MATR_ALUNO").text();
+      const codDisciplinaAtual = $(this).find("COD_ATIV_CURRIC").text();
 
-      if (currentRA === studentRA && currentDisciplineCode === disciplineCode) {
+      if (RAatual === RAaluno && codDisciplinaAtual === codDisciplina) {
         const anoSemestre = $(this).find("PERIODO").text();
         const nota = $(this).find("MEDIA_FINAL").text();
         const frequencia = $(this).find("FREQUENCIA").text();
 
-        enrollmentHistory.push({ anoSemestre, nota, frequencia });
+        historicoMatricula.push({ anoSemestre, nota, frequencia });
       }
     });
 
-  return enrollmentHistory;
+  return historicoMatricula;
+}
+
+function getDadosMatricula(xmlData, RAaluno, codDisciplina) {
+  const dadosMatricula = $(xmlData)
+    .find("ALUNO")
+    .filter(function () {
+      const RAatual = $(this).find("MATR_ALUNO").text();
+      const codDisciplinaAtual = $(this).find("COD_ATIV_CURRIC").text();
+      return (
+        RAatual === RAaluno && codDisciplinaAtual === codDisciplina
+      );
+    })
+    .last();
+
+  if (!dadosMatricula.length) return null;
+
+  const ultCursada = dadosMatricula.find("PERIODO").text();
+  const nota = dadosMatricula.find("MEDIA_FINAL").text();
+  const frequencia = dadosMatricula.find("FREQUENCIA").text();
+
+  return { ultCursada, nota, frequencia };
 }
