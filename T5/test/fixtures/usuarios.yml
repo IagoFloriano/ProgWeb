@@ -1,0 +1,14 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  id: 980190962
+  nome: MyString
+  email: MyString
+  senha: MyString
+  admin: false
+
+two:
+  nome: MyString
+  email: MyString
+  senha: MyString
+  admin: false

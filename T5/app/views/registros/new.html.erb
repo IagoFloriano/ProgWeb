@@ -1,0 +1,35 @@
+<% if session[:admin] %>
+  <table>
+    <thead>
+      <tr>
+        <th colspan="2"><h1 class="heading">Novo Registro</h1></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <%= form_with(model: @registro, url: registros_path, local: true) do |form| %>
+            <%= form.label :nome %>
+            <%= form.text_field :nome %>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <div class="button-group">
+              <p><%= link_to 'Criar Registro', '#', onclick: 'event.preventDefault(); document.querySelector("form").submit();' %></p>
+            </div>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2">
+            <div class="button-group">
+              <p><%= link_to 'Voltar para Lista de Registros', registros_path %></p>
+            </div>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+<% end %>

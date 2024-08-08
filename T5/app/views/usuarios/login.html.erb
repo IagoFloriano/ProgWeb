@@ -1,0 +1,33 @@
+<table>
+  <thead>
+    <tr>
+      <th colspan="2"><h1 class="heading">Login</h1></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <%= form_with(url: login_submit_usuarios_path, method: :post, local: true) do |form| %>
+      </td>
+    </tr>
+    <tr>
+      <td><%= form.label :email %></td>
+      <td><%= form.email_field :email, name: 'usuario[email]' %></td>
+    </tr>
+    <tr>
+      <td><%= form.label :password %></td>
+      <td><%= form.password_field :password, name: 'usuario[password]' %></td>
+    </tr>
+    <tr>
+      <td colspan="2"><%= form.submit 'Login' %></td>
+    </tr>
+    <tr>
+      <td>
+        <% end %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+

@@ -1,0 +1,28 @@
+<table>
+  <thead>
+    <tr>
+      <th colspan="2"><h1 class="heading">Detalhes do Registro</h1></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="registro-details">
+          <p><strong>Nome:</strong> <%= @registro.nome %></p>
+          <p><strong>Criado em:</strong> <%= @registro.created_at %></p>
+          <p><strong>Atualizado em:</strong> <%= @registro.updated_at %></p>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <div class="button-group">
+          <% if session[:admin] %>
+            <p><%= link_to 'Editar Registro', edit_registro_path(@registro) %></p>
+          <% end %>
+          <p><%= link_to 'Voltar para Lista de Registros', registros_path %></p>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
